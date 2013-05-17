@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Summary: Install a version of PhantomJS.
+#
+# Usage: phantomenv install <version>
+#
+# Versions should be in the form of vN.N.N
+
+# Bomb out if we hit an error, ever
+set -e
+
+# Verbose output in debug mode
+[ -n "$PHANTOMENV_DEBUG" ] && {
+  set -x
+}
+
+# Pull the desired version out of ARGV
+version="$1"
+version_dir="$PHANTOMENV_ROOT/versions/$version"
+
+# stash the pwd
+OLDPWD=$(pwd)
+
+# Make the version dir and get in there
+mkdir -p "$version_dir"
+cd "$version_dir"
+
+# Determine url to download from
+if [ "$(uname -s)" = "Darwin" ]; then
+  platform="macosx"
+else
+  platform="linux"
+fi
+
+arch="$(uname -m)"
+
+# URL to download from
+download="https://phantomjs.googlecode.com/files/phantomjs-${version}-${platform}.zip"
+alt_download="https://phantomjs.googlecode.com/files/phantomjs-${version}-${platform}-${arch}.tar.bz2"
+
+# Can't get too clever here
+set +e
+
+# Download binary tarball and install
+# Linux downloads are formatted differently from OS X
+(
+  curl -s -f "$download" > /tmp/phantomjs-$version-$platform.zip && \
+  unzip /tmp/phantomjs-$version-$platform.zip -d /tmp && \
+  mv /tmp/phantomjs-$version-$platform $version_dir && \
+  rm /tmp/phantomjs-$version-$platform.zip
+) || (
+  curl -s -f "$alt_download" > /tmp/phantomjs-$version-$platform-$arch.tar.bz2 && \
+  tar jxvf /tmp/phantomjs-$version-$platform-$arch.tar.bz2 --strip-components 1 && \
+  rm /tmp/phantomjs-$version-$platform-$arch.tar.bz2
+) || \
+  {
+    cd $OLDPWD
+    rmdir "$version_dir"
+
+    echo "phantomenv: unable to install PhantomJS \`${version}' from binary, download not available"
+    exit 1
+  }
+
+echo "Installed ${version}"
+cd $OLDPWD

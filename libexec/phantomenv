@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+# phantomenv version
+version="0.1.0"
+
+# Bomb out if we hit an error, ever
+set -e
+
+# Verbose output in debug mode
+[ -n "$PHANTOMENV_DEBUG" ] && {
+  set -x
+}
+
+# Helper functions
+resolve_link() {
+  $(type -p greadlink readlink | head -1) "$1"
+}
+
+abs_dirname() {
+  local cwd="$(pwd)"
+  local path="$1"
+
+  while [ -n "$path" ]; do
+    cd "${path%/*}"
+    local name="${path##*/}"
+    path="$(resolve_link "$name" || true)"
+  done
+
+  pwd
+  cd "$cwd"
+}
+
+# Set up PHANTOMENV_ROOT, location where everything lives
+
+if [ -z "${PHANTOMENV_ROOT}" ]; then
+  PHANTOMENV_ROOT="${HOME}/.phantomenv"
+else
+  PHANTOMENV_ROOT="${PHANTOMENV_ROOT%/}"
+fi
+
+export PHANTOMENV_ROOT
+
+# Jump into the PHANTOMENV_DIR
+if [ -z "${PHANTOMENV_DIR}" ]; then
+  PHANTOMENV_DIR="$(pwd)"
+else
+  cd "${PHANTOMENV_DIR}" 2>/dev/null || {
+    echo "phantomenv: cannot change working directory to \`$PHANTOMENV_DIR'"
+    exit 1
+  } >&2
+
+  PHANTOMENV_DIR="$(pwd)"
+
+  cd "$OLDPWD"
+fi
+
+export PHANTOMENV_DIR
+
+# Pop the first argument, our subcommand
+command="$1"
+
+# Make sure we can find out utilities on PATH
+bin_path="$(abs_dirname "$0")"
+export PATH="${bin_path}":$PATH
+
+case "$command" in
+  "" | "-h" | "--help" )
+    exec phantomenv-help
+    ;;
+
+  "-v" | "--version" )
+    echo "phantomenv ${version}"
+    exit
+    ;;
+
+  *)
+    command_path="${bin_path}/phantomenv-${command}"
+
+    [ -x "${command_path}" ] || {
+      echo "phantomenv: no such command \`$command'" >&2
+      exit 1
+    }
+
+    shift 1
+    exec "phantomenv-$command" "$@"
+    ;;
+esac

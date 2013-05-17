@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#
+# Summary: Set PHANTOMENV_VERSION for the lifetime of a shell.
+#
+# Usage: phantomenv shell <version>
+#        phantomenv shell --unset|-u
+
+# Bomb out if we hit an error, ever
+set -e
+
+# Verbose output in debug mode
+[ -n "$PHANTOMENV_DEBUG" ] && {
+  set -x
+}
+
+version_installed() {
+  local v="$1"
+  [ -d "${PHANTOMENV_ROOT}/versions/${v}" ]
+}
+
+# Set the version
+version="$1"
+
+case "$version" in
+  "")
+    if [ -z "$PHANTOMENV_VERSION" ]; then
+      echo "phantomenv: no shell version configured" >&2
+      exit 1
+    else
+      echo "echo \"$PHANTOMENV_VERSION\""
+    fi
+    ;;
+
+  "-u" | "--unset")
+    echo "unset PHANTOMENV_VERSION"
+    ;;
+
+  *)
+    export PHANTOMENV_VERSION="$version"
+
+    if version_installed "$version"; then
+      echo "export PHANTOMENV_VERSION=\"${version}\""
+    else
+      echo "phantomenv: version \`${version}' is not installed" >&2
+      exit 1
+    fi
+    ;;
+esac

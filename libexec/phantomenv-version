@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Summary: Show the current PhantomJS version.
+
+# Bomb out if we hit an error, ever
+set -e
+
+# Verbose output in debug mode
+[ -n "$PHANTOMENV_DEBUG" ] && {
+  set -x
+}
+
+if [ -z "${PHANTOMENV_VERSION}" ]; then
+  export PHANTOMENV_VERSION_FILE="$(phantomenv-version-file)"
+  export PHANTOMENV_VERSION="$(phantomenv-version-file-read "$PHANTOMENV_VERSION_FILE" || true)"
+fi
+
+version_exists() {
+  local version="$1"
+  [ -n "${version}" ] && \
+    [ -d "${PHANTOMENV_ROOT}/versions/${version}" ]
+}
+
+no_versions() {
+  [ -z "$(phantomenv-versions)" ]
+}
+
+if [ -z "$PHANTOMENV_VERSION" ]; then
+  echo "phantomenv: couldn't find any version specified for use" >&2
+  exit 1
+elif version_exists "$PHANTOMENV_VERSION"; then
+  echo "$PHANTOMENV_VERSION"
+elif no_versions; then
+  echo "phantomenv: no versions of PhantomJS are currently installed" >&2
+  exit 1
+else
+  echo "phantomenv: version \`$PHANTOMENV_VERSION' is not installed" >&2
+  exit 1
+fi
