@@ -3,7 +3,7 @@
 #
 # Usage: phantomenv install <version>
 #
-# Versions should be in the form of vN.N.N
+# Versions should be in the form of N.N.N
 
 # Bomb out if we hit an error, ever
 set -e
