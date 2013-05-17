@@ -44,7 +44,7 @@ set +e
 # Linux downloads are formatted differently from OS X
 (
   curl -s -f "$download" > /tmp/phantomjs-$version-$platform.zip && \
-  unzip /tmp/phantomjs-$version-$platform.zip -d /tmp && \
+  unzip /tmp/phantomjs-$version-$platform.zip -o -d /tmp && \
   mv /tmp/phantomjs-$version-$platform $version_dir && \
   rm /tmp/phantomjs-$version-$platform.zip
 ) || (
