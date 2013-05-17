@@ -62,3 +62,5 @@ set +e
 
 echo "Installed ${version}"
 cd $OLDPWD
+
+exec "${PHANTOMENV_ROOT}/bin/phantomenv" rehash
