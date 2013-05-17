@@ -7,7 +7,7 @@ rbenv, but for phantomjs.
 To install the latest stable release:
 
 ```
-git clone -b v0.1 https://github.com/wfarr/phantomenv.git ~/.phantomenv
+git clone -b v0.0.8 https://github.com/wfarr/phantomenv.git ~/.phantomenv
 ```
 
 Then add the following to your shell config at the end:
