@@ -45,7 +45,7 @@ set +e
 (
   curl -s -f "$download" > /tmp/phantomjs-$version-$platform.zip && \
   unzip -o /tmp/phantomjs-$version-$platform.zip -d /tmp && \
-  mv /tmp/phantomjs-$version-$platform $version_dir && \
+  mv /tmp/phantomjs-$version-$platform/bin $version_dir/bin && \
   rm /tmp/phantomjs-$version-$platform.zip
 ) || (
   curl -s -f "$alt_download" > /tmp/phantomjs-$version-$platform-$arch.tar.bz2 && \
