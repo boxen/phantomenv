@@ -14,7 +14,7 @@ Then add the following to your shell config at the end:
 
 ```
 export PATH="$HOME/.phantomenv/bin:$PATH"
-eval "(phantomenv init -)"
+eval "$(phantomenv init -)"
 ```
 
 ## Usage
