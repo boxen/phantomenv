@@ -34,8 +34,8 @@ fi
 arch="$(uname -m)"
 
 # URL to download from
-download="https://phantomjs.googlecode.com/files/phantomjs-${version}-${platform}.zip"
-alt_download="https://phantomjs.googlecode.com/files/phantomjs-${version}-${platform}-${arch}.tar.bz2"
+download="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-${version}-${platform}.zip"
+alt_download="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-${version}-${platform}.tar.bz2"
 
 # Can't get too clever here
 set +e
