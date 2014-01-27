@@ -43,12 +43,12 @@ set +e
 # Download binary tarball and install
 # Linux downloads are formatted differently from OS X
 (
-  curl -s -f "$download" > /tmp/phantomjs-$version-$platform.zip && \
+  curl -Ls -f "$download" > /tmp/phantomjs-$version-$platform.zip && \
   unzip -o /tmp/phantomjs-$version-$platform.zip -d /tmp && \
   mv /tmp/phantomjs-$version-$platform/bin $version_dir/bin && \
   rm /tmp/phantomjs-$version-$platform.zip
 ) || (
-  curl -s -f "$alt_download" > /tmp/phantomjs-$version-$platform-$arch.tar.bz2 && \
+  curl -Ls -f "$alt_download" > /tmp/phantomjs-$version-$platform-$arch.tar.bz2 && \
   tar jxvf /tmp/phantomjs-$version-$platform-$arch.tar.bz2 --strip-components 1 && \
   rm /tmp/phantomjs-$version-$platform-$arch.tar.bz2
 ) || \
