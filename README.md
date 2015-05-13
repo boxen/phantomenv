@@ -1,13 +1,13 @@
 # phantomenv
 
-rbenv, but for phantomjs.
+rbenv, but for PhantomJS.
 
 ## Installation
 
 To install the latest stable release:
 
 ```
-git clone -b v0.0.8 https://github.com/wfarr/phantomenv.git ~/.phantomenv
+git clone -b v0.0.9 https://github.com/boxen/phantomenv.git ~/.phantomenv
 ```
 
 Then add the following to your shell config at the end:
